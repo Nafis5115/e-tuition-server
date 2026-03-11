@@ -4,6 +4,7 @@ import { MongoClient, ServerApiVersion } from "mongodb";
 import dotenv from "dotenv";
 import connectDB from "./config/db.js";
 import userRoutes from "./routes/user.routes.js";
+import tuitionRoutes from "./routes/tuition.routes.js";
 dotenv.config();
 
 const app = express();
@@ -14,6 +15,7 @@ app.use(express.json());
 connectDB();
 
 app.use("/api", userRoutes);
+app.use("/api", tuitionRoutes);
 
 app.get("/", (req, res) => {
   res.json({ message: "E-Tuition Server running" });
