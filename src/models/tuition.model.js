@@ -22,6 +22,10 @@ const tuiTionSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    medium: {
+      type: String,
+      required: true,
+    },
     description: {
       type: String,
       required: true,
