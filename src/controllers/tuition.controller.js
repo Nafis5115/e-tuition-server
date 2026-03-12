@@ -21,3 +21,14 @@ export const getTuitionByUser = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+export const getTuitionDetails = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const tuition = await Tuition.findById(id);
+    res.status(200).json(tuition);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+};
