@@ -1,3 +1,7 @@
+/**
+ * @param {import("express").Request} req
+ * @param {import("express").Response} res
+ */
 import User from "../models/user.model.js";
 
 export const getUsers = async (req, res) => {

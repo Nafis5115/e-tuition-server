@@ -1,3 +1,7 @@
+/**
+ * @param {import("express").Request} req
+ * @param {import("express").Response} res
+ */
 import Tuition from "../models/tuition.model.js";
 
 export const createTuition = async (req, res) => {
@@ -12,10 +16,23 @@ export const createTuition = async (req, res) => {
 
 export const getTuitionByUser = async (req, res) => {
   try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 6;
+    const skip = (page - 1) * limit;
     const userEmail = req.query.email;
     const query = { userEmail };
-    const tuitions = await Tuition.find(query).sort({ createdAt: -1 });
-    res.status(200).json(tuitions);
+    const tuitions = await Tuition.find(query)
+      .skip(skip)
+      .limit(limit)
+      .sort({ createdAt: -1 });
+
+    const total = await Tuition.countDocuments();
+    res.status(200).json({
+      data: tuitions,
+      total,
+      page,
+      totalPages: Math.ceil(total / limit),
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message });
