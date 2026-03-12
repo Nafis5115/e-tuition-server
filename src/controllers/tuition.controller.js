@@ -1,7 +1,3 @@
-/**
- * @param {import("express").Request} req
- * @param {import("express").Response} res
- */
 import Tuition from "../models/tuition.model.js";
 
 export const createTuition = async (req, res) => {
@@ -14,12 +10,15 @@ export const createTuition = async (req, res) => {
   }
 };
 
-export const getTuitionByUser = async (req, res) => {
+export const getTuitionsByUser = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 6;
     const skip = (page - 1) * limit;
     const userEmail = req.query.email;
+    if (userEmail !== req.headers.token_email) {
+      return res.status(403).send({ message: "Forbidden Access!" });
+    }
     const query = { userEmail };
     const tuitions = await Tuition.find(query)
       .skip(skip)
