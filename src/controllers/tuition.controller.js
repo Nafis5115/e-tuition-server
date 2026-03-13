@@ -48,3 +48,14 @@ export const getTuitionDetails = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+export const getAllTuitions = async (req, res) => {
+  try {
+    // const query = { status: "approved" };
+    const tuitions = await Tuition.find();
+    res.status(200).json(tuitions);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+};
