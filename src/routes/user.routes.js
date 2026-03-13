@@ -2,6 +2,7 @@ import express from "express";
 import {
   createUser,
   getUserPhone,
+  getUserRole,
   getUsers,
   updateUserProfile,
 } from "../controllers/user.controller.js";
@@ -13,5 +14,5 @@ router.get("/get-users", verifyFirebaseToken, getUsers);
 router.post("/create-user", createUser);
 router.get("/get-user-phone", verifyFirebaseToken, getUserPhone);
 router.patch("/update-user-profile", verifyFirebaseToken, updateUserProfile);
-
+router.get("/user/:email/role", verifyFirebaseToken, getUserRole);
 export default router;

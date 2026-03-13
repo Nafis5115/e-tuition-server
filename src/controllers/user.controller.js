@@ -27,6 +27,9 @@ export const createUser = async (req, res) => {
 export const getUserPhone = async (req, res) => {
   try {
     const email = req.query.email;
+    if (req.headers.token_email !== email) {
+      return res.status(403).send({ message: "Forbidden Access" });
+    }
     const query = { email };
     const user = await User.findOne(query);
     res.status(200).json({ phone: user.phone });
@@ -38,9 +41,12 @@ export const getUserPhone = async (req, res) => {
 
 export const updateUserProfile = async (req, res) => {
   try {
-    const { phone, name } = req.body;
-    const email = req.headers.token_email;
-    const query = { email };
+    const { phone, name, email } = req.body;
+    const queryEmail = req.headers.token_email;
+    if (queryEmail !== email) {
+      return res.status(403).send({ message: "Forbidden Access" });
+    }
+    const query = { email: queryEmail };
     const update = {
       $set: {
         name: name,
@@ -49,6 +55,18 @@ export const updateUserProfile = async (req, res) => {
     };
     const updatedUser = await User.updateOne(query, update);
     res.status(200).send(updatedUser);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const getUserRole = async (req, res) => {
+  try {
+    const email = req.params.email;
+    const query = { email };
+    const user = await User.findOne(query);
+    res.status(200).json({ role: user.role });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message });
