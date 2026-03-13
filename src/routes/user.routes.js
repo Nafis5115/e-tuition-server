@@ -1,9 +1,17 @@
 import express from "express";
-import { createUser, getUsers } from "../controllers/user.controller.js";
+import {
+  createUser,
+  getUserPhone,
+  getUsers,
+  updateUserProfile,
+} from "../controllers/user.controller.js";
+import verifyFirebaseToken from "../middleware/verifyFirebaseToken.js";
 
 const router = express.Router();
 
-router.get("/get-users", getUsers);
+router.get("/get-users", verifyFirebaseToken, getUsers);
 router.post("/create-user", createUser);
+router.get("/get-user-phone", verifyFirebaseToken, getUserPhone);
+router.patch("/update-user-profile", verifyFirebaseToken, updateUserProfile);
 
 export default router;

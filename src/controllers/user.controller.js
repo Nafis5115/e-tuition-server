@@ -35,3 +35,22 @@ export const getUserPhone = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+export const updateUserProfile = async (req, res) => {
+  try {
+    const { phone, name } = req.body;
+    const email = req.headers.token_email;
+    const query = { email };
+    const update = {
+      $set: {
+        name: name,
+        phone: phone,
+      },
+    };
+    const updatedUser = await User.updateOne(query, update);
+    res.status(200).send(updatedUser);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+};
