@@ -42,6 +42,14 @@ export const getUserPhone = async (req, res) => {
 export const updateUserProfile = async (req, res) => {
   try {
     const { phone, name, email } = req.body;
+    if (req.headers.token_email !== email) {
+      return res.status(403).send({ message: "Forbidden Access" });
+    }
+    if (!phone || phone.trim() === "") {
+      return res.status(400).send({
+        message: "Phone number is required",
+      });
+    }
     const queryEmail = req.headers.token_email;
     if (queryEmail !== email) {
       return res.status(403).send({ message: "Forbidden Access" });
@@ -64,6 +72,9 @@ export const updateUserProfile = async (req, res) => {
 export const getUserRole = async (req, res) => {
   try {
     const email = req.params.email;
+    if (req.headers.token_email !== email) {
+      return res.status(403).send({ message: "Forbidden Access" });
+    }
     const query = { email };
     const user = await User.findOne(query);
     res.status(200).json({ role: user.role });
