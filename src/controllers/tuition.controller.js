@@ -25,7 +25,7 @@ export const getTuitionsByUser = async (req, res) => {
       .limit(limit)
       .sort({ createdAt: -1 });
 
-    const total = await Tuition.countDocuments();
+    const total = await Tuition.countDocuments(query);
     res.status(200).json({
       data: tuitions,
       total,
