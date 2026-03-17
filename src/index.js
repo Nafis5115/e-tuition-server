@@ -6,6 +6,7 @@ import connectDB from "./config/db.js";
 import userRoutes from "./routes/user.routes.js";
 import tuitionRoutes from "./routes/tuition.routes.js";
 import tutorProfileRoutes from "./routes/tutorProfile.routes.js";
+import tutorApplicationRoutes from "./routes/tutorApplication.routes.js";
 dotenv.config();
 
 const app = express();
@@ -18,6 +19,7 @@ connectDB();
 app.use("/api", userRoutes);
 app.use("/api", tuitionRoutes);
 app.use("/api", tutorProfileRoutes);
+app.use("/api", tutorApplicationRoutes);
 
 app.get("/", (req, res) => {
   res.json({ message: "E-Tuition Server running" });
