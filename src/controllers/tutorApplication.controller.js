@@ -17,3 +17,23 @@ export const createTutorApplication = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+export const checkAlreadyApplied = async (req, res) => {
+  try {
+    const { tutorEmail, tuitionId } = req.query;
+    if (!tutorEmail || !tuitionId) {
+      return res.status(400).json({ message: "Missing data" });
+    }
+
+    const existingApplication = await TutorApplication.findOne({
+      tutorEmail,
+      tuitionId,
+    });
+    res.status(200).json({
+      applied: !!existingApplication,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+};
