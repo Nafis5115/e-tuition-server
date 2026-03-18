@@ -37,3 +37,32 @@ export const checkAlreadyApplied = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+export const getApplicationsByTutor = async (req, res) => {
+  try {
+    const { email } = req.query;
+    const applications = await TutorApplication.aggregate([
+      {
+        $match: { tutorEmail: email },
+      },
+      {
+        $lookup: {
+          from: "tuitions",
+          localField: "tuitionId",
+          foreignField: "_id",
+          as: "tuition",
+        },
+      },
+      {
+        $unwind: "$tuition",
+      },
+      {
+        $sort: { createdAt: -1 },
+      },
+    ]);
+    res.status(200).json(applications);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+};
