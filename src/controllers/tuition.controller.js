@@ -1,4 +1,5 @@
 import Tuition from "../models/tuition.model.js";
+import { ObjectId } from "mongodb";
 
 export const createTuition = async (req, res) => {
   try {
@@ -81,6 +82,21 @@ export const getAllTuitions = async (req, res) => {
       total,
       totalPages: Math.ceil(total / limit),
     });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const updateTuition = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const query = { _id: new ObjectId(id) };
+    const update = {
+      $set: req.body,
+    };
+    const tuition = await Tuition.updateOne(query, update);
+    res.status(200).json(tuition);
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message });
