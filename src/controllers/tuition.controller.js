@@ -114,3 +114,51 @@ export const deleteTuition = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+export const getAppliedTutors = async (req, res) => {
+  try {
+    const userEmail = req.query.email;
+    const appliedTutors = await Tuition.aggregate([
+      {
+        $match: { userEmail },
+      },
+      {
+        $lookup: {
+          from: "tutorapplications",
+          localField: "_id",
+          foreignField: "tuitionId",
+          as: "applications",
+        },
+      },
+      {
+        $unwind: "$applications",
+      },
+      {
+        $lookup: {
+          from: "tutorprofiles",
+          localField: "applications.tutorEmail",
+          foreignField: "email",
+          as: "tutor",
+        },
+      },
+      {
+        $unwind: "$tutor",
+      },
+      {
+        $project: {
+          tuitionId: "$_id",
+          subject: 1,
+          tutorName: "$tutor.name",
+          tutorEmail: "$tutor.email",
+          tutorLocation: "$tutor.location",
+          experience: "$tutor.experience",
+          status: "$applications.status",
+        },
+      },
+    ]);
+    res.json(appliedTutors);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+};

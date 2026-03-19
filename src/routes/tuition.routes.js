@@ -6,6 +6,7 @@ import {
   getAllTuitions,
   updateTuition,
   deleteTuition,
+  getAppliedTutors,
 } from "../controllers/tuition.controller.js";
 import verifyFirebaseToken from "../middleware/verifyFirebaseToken.js";
 
@@ -17,5 +18,6 @@ router.get("/tuition-details/:id", getTuitionDetails);
 router.get("/all-tuitions", getAllTuitions);
 router.patch("/update-tuition/:id", verifyFirebaseToken, updateTuition);
 router.delete("/delete-tuition/:id", deleteTuition);
+router.get("/get-applied-tutors", getAppliedTutors);
 
 export default router;
