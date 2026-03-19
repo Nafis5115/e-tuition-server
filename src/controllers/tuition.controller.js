@@ -102,3 +102,15 @@ export const updateTuition = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+export const deleteTuition = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const query = { _id: new ObjectId(id) };
+    const deleteTuition = await Tuition.deleteOne(query);
+    res.status(200).json(deleteTuition);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+};
