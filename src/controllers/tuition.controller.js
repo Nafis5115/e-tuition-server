@@ -145,9 +145,26 @@ export const getAppliedTutors = async (req, res) => {
         $unwind: "$tutor",
       },
       {
+        $lookup: {
+          from: "users",
+          localField: "applications.tutorEmail",
+          foreignField: "email",
+          as: "user",
+        },
+      },
+
+      {
+        $unwind: {
+          path: "$user",
+          preserveNullAndEmptyArrays: true, // avoids crash if no user found
+        },
+      },
+      {
         $project: {
           tuitionId: "$_id",
           subject: 1,
+          budget: 1,
+          photoURL: "$user.photoURL",
           tutorName: "$tutor.name",
           tutorEmail: "$tutor.email",
           tutorLocation: "$tutor.location",
