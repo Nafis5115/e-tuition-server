@@ -83,3 +83,44 @@ export const getUserRole = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+export const getAllTutors = async (req, res) => {
+  try {
+    const tutors = await User.aggregate([
+      {
+        $match: { role: "tutor" },
+      },
+      {
+        $lookup: {
+          from: "tutorprofiles",
+          localField: "email",
+          foreignField: "email",
+          as: "tutor",
+        },
+      },
+      {
+        $unwind: {
+          path: "$tutor",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          email: 1,
+          photoURL: 1,
+          location: "$tutor.location",
+          experience: "$tutor.experience",
+          subjects: "$tutor.subjects",
+          qualifications: "$tutor.qualifications",
+          about: "$tutor.about",
+        },
+      },
+    ]);
+    res.status(200).json(tutors);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+};

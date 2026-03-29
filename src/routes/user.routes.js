@@ -1,6 +1,7 @@
 import express from "express";
 import {
   createUser,
+  getAllTutors,
   getUserPhone,
   getUserRole,
   getUsers,
@@ -15,4 +16,5 @@ router.post("/create-user", createUser);
 router.get("/get-user-phone", verifyFirebaseToken, getUserPhone);
 router.patch("/update-user-profile", verifyFirebaseToken, updateUserProfile);
 router.get("/user/:email/role", verifyFirebaseToken, getUserRole);
+router.get("/all-tutors", getAllTutors);
 export default router;
