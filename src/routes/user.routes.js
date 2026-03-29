@@ -2,6 +2,7 @@ import express from "express";
 import {
   createUser,
   getAllTutors,
+  getSingleTutor,
   getUserPhone,
   getUserRole,
   getUsers,
@@ -17,4 +18,5 @@ router.get("/get-user-phone", verifyFirebaseToken, getUserPhone);
 router.patch("/update-user-profile", verifyFirebaseToken, updateUserProfile);
 router.get("/user/:email/role", verifyFirebaseToken, getUserRole);
 router.get("/all-tutors", getAllTutors);
+router.get("/tutor-details/:id", getSingleTutor);
 export default router;

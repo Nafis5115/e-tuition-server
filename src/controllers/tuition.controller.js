@@ -162,6 +162,7 @@ export const getAppliedTutors = async (req, res) => {
       {
         $project: {
           tuitionId: "$_id",
+          tutorId: "$user._id",
           subject: 1,
           budget: 1,
           photoURL: "$user.photoURL",

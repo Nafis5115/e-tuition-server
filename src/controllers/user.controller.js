@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import User from "../models/user.model.js";
 
 export const getUsers = async (req, res) => {
@@ -119,6 +120,57 @@ export const getAllTutors = async (req, res) => {
       },
     ]);
     res.status(200).json(tutors);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const getSingleTutor = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "Invalid tutor ID" });
+    }
+    const tutor = await User.aggregate([
+      {
+        $match: {
+          _id: new mongoose.Types.ObjectId(id),
+          role: "tutor",
+        },
+      },
+      {
+        $lookup: {
+          from: "tutorprofiles",
+          localField: "email",
+          foreignField: "email",
+          as: "tutor",
+        },
+      },
+      {
+        $unwind: {
+          path: "$tutor",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          email: 1,
+          photoURL: 1,
+          location: "$tutor.location",
+          experience: "$tutor.experience",
+          subjects: "$tutor.subjects",
+          qualifications: "$tutor.qualifications",
+          about: "$tutor.about",
+        },
+      },
+    ]);
+    if (!tutor.length) {
+      return res.status(404).json({ message: "Tutor not found" });
+    }
+    res.status(200).json(tutor[0]);
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message });
