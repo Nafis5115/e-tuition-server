@@ -1,4 +1,6 @@
 import TutorProfile from "../models/tutorProfile.model.js";
+import User from "../models/user.model.js";
+import { ObjectId } from "mongodb";
 
 export const createTutorProfile = async (req, res) => {
   try {
@@ -76,9 +78,6 @@ export const getPendingTutors = async (req, res) => {
   try {
     const pendingTutors = await TutorProfile.aggregate([
       {
-        $match: { status: "pending" },
-      },
-      {
         $lookup: {
           from: "users",
           localField: "email",
@@ -108,6 +107,28 @@ export const getPendingTutors = async (req, res) => {
       },
     ]);
     res.status(200).send(pendingTutors);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const manageTutor = async (req, res) => {
+  try {
+    const { email } = req.params;
+    const query = { email };
+    const updateStatus = {
+      $set: { status: req.body.status },
+    };
+    const statusResult = await TutorProfile.updateOne(query, updateStatus);
+    const updateRole = {
+      $set: { role: req.body.role },
+    };
+    const roleResult = await User.updateOne(query, updateRole);
+    res.status(200).json({
+      role: roleResult,
+      status: statusResult,
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message });

@@ -5,6 +5,7 @@ import {
   getPendingTutors,
   getTutorApplicationStatus,
   getTutorDetails,
+  manageTutor,
   updateTutorProfile,
 } from "../controllers/tutorProfile.controller.js";
 
@@ -19,5 +20,6 @@ router.get(
 router.get("/tutor-details", verifyFirebaseToken, getTutorDetails);
 router.patch("/update-tutorProfile", verifyFirebaseToken, updateTutorProfile);
 router.get("/pending-tutors", getPendingTutors);
+router.patch("/manage-tutor/:email", manageTutor);
 
 export default router;
