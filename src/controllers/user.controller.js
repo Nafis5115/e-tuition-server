@@ -78,7 +78,7 @@ export const getUserRole = async (req, res) => {
     }
     const query = { email };
     const user = await User.findOne(query);
-    res.status(200).json({ role: user.role });
+    res.status(200).json({ role: user?.role });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message });
