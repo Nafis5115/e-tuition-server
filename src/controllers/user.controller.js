@@ -71,6 +71,18 @@ export const updateUserProfile = async (req, res) => {
   }
 };
 
+export const deleteUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const query = { _id: new ObjectId(id) };
+    const result = await User.deleteOne(query);
+    res.status(200).json(result);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
 export const getUserRole = async (req, res) => {
   try {
     const email = req.params.email;
