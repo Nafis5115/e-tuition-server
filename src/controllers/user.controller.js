@@ -1,7 +1,8 @@
 import mongoose from "mongoose";
 import User from "../models/user.model.js";
+import { ObjectId } from "mongodb";
 
-export const getUsers = async (req, res) => {
+export const getAllUsers = async (req, res) => {
   try {
     const users = await User.find();
     res.json(users);
@@ -171,6 +172,22 @@ export const getSingleTutor = async (req, res) => {
       return res.status(404).json({ message: "Tutor not found" });
     }
     res.status(200).json(tutor[0]);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const updateUserRole = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { role } = req.body;
+    const query = { _id: new ObjectId(id) };
+    const updateRole = {
+      $set: { role },
+    };
+    const result = await User.updateOne(query, updateRole);
+    res.status(200).json(result);
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message });
