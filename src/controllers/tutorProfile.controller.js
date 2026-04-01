@@ -71,3 +71,45 @@ export const updateTutorProfile = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+export const getPendingTutors = async (req, res) => {
+  try {
+    const pendingTutors = await TutorProfile.aggregate([
+      {
+        $match: { status: "pending" },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "email",
+          foreignField: "email",
+          as: "tutor",
+        },
+      },
+      {
+        $unwind: "$tutor",
+      },
+      {
+        $project: {
+          _id: 1,
+          email: 1,
+          about: 1,
+          experience: 1,
+          location: 1,
+          qualifications: 1,
+          subjects: 1,
+          status: 1,
+          createdAt: 1,
+          updatedAt: 1,
+          tutorId: "$tutor._id",
+          tutorName: "$tutor.name",
+          tutorPhotoURL: "$tutor.photoURL",
+        },
+      },
+    ]);
+    res.status(200).send(pendingTutors);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+};

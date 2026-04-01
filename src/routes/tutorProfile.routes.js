@@ -2,6 +2,7 @@ import express from "express";
 import verifyFirebaseToken from "../middleware/verifyFirebaseToken.js";
 import {
   createTutorProfile,
+  getPendingTutors,
   getTutorApplicationStatus,
   getTutorDetails,
   updateTutorProfile,
@@ -17,4 +18,6 @@ router.get(
 );
 router.get("/tutor-details", verifyFirebaseToken, getTutorDetails);
 router.patch("/update-tutorProfile", verifyFirebaseToken, updateTutorProfile);
+router.get("/pending-tutors", getPendingTutors);
+
 export default router;
