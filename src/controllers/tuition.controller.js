@@ -180,3 +180,43 @@ export const getAppliedTutors = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+export const getAllTuitions = async (req, res) => {
+  try {
+    const tuitions = await Tuition.aggregate([
+      {
+        $lookup: {
+          from: "users",
+          localField: "userEmail",
+          foreignField: "email",
+          as: "tutor",
+        },
+      },
+      {
+        $unwind: "$tutor",
+      },
+      {
+        $project: {
+          _id: 1,
+          userEmail: 1,
+          subject: 1,
+          class: 1,
+          budget: 1,
+          schedule: 1,
+          medium: 1,
+          location: 1,
+          description: 1,
+          requirements: 1,
+          status: 1,
+          createdAt: 1,
+          updatedAt: 1,
+          tutorName: "$tutor.name",
+        },
+      },
+    ]);
+    res.status(200).json(tuitions);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+};
