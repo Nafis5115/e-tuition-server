@@ -19,7 +19,7 @@ router.post("/create-user", createUser);
 router.get("/get-user-phone", verifyFirebaseToken, getUserPhone);
 router.patch("/update-user-profile", verifyFirebaseToken, updateUserProfile);
 router.get("/user/:email/role", verifyFirebaseToken, getUserRole);
-router.get("/all-tutors", verifyFirebaseToken, getAllTutors);
+router.get("/all-tutors", getAllTutors);
 router.get("/tutor-details/:id", getSingleTutor);
 router.patch("/update-user-role/:id", verifyFirebaseToken, updateUserRole);
 router.delete("/delete-user/:id", verifyFirebaseToken, deleteUser);
