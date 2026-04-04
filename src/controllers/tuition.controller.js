@@ -54,7 +54,7 @@ export const getAllApprovedTuitions = async (req, res) => {
   try {
     // const query = { status: "approved" };
     const { class: classFilter, sort, search } = req.query;
-    const query = {};
+    const query = { status: "approved" };
     if (classFilter) {
       query.class = classFilter;
     }
@@ -196,25 +196,32 @@ export const getAllTuitions = async (req, res) => {
         $unwind: "$tutor",
       },
       {
-        $project: {
-          _id: 1,
-          userEmail: 1,
-          subject: 1,
-          class: 1,
-          budget: 1,
-          schedule: 1,
-          medium: 1,
-          location: 1,
-          description: 1,
-          requirements: 1,
-          status: 1,
-          createdAt: 1,
-          updatedAt: 1,
+        $addFields: {
           tutorName: "$tutor.name",
         },
       },
+
+      {
+        $unset: ["tutor"],
+      },
     ]);
     res.status(200).json(tuitions);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const manageTuition = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+    const query = { _id: new ObjectId(id) };
+    const update = {
+      $set: { status },
+    };
+    const result = await Tuition.updateOne(query, update);
+    res.status(200).json(result);
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message });

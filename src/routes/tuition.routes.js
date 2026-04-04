@@ -8,6 +8,7 @@ import {
   getAppliedTutors,
   getAllApprovedTuitions,
   getAllTuitions,
+  manageTuition,
 } from "../controllers/tuition.controller.js";
 import verifyFirebaseToken from "../middleware/verifyFirebaseToken.js";
 
@@ -18,6 +19,7 @@ router.get("/get-user-tuitions", verifyFirebaseToken, getTuitionsByUser);
 router.get("/tuition-details/:id", getTuitionDetails);
 router.get("/all-approved-tuitions", getAllApprovedTuitions);
 router.get("/all-tuitions", getAllTuitions);
+router.patch("/manage-tuition/:id", manageTuition);
 router.patch("/update-tuition/:id", verifyFirebaseToken, updateTuition);
 router.delete("/delete-tuition/:id", deleteTuition);
 router.get("/get-applied-tutors", getAppliedTutors);
