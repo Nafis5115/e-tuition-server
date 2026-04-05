@@ -46,6 +46,10 @@ const tuiTionSchema = new mongoose.Schema(
       type: String,
       default: "pending",
     },
+    assignedTutor: {
+      type: String,
+      default: null,
+    },
   },
   { timestamps: true },
 );

@@ -50,11 +50,36 @@ export const paymentSuccess = async (req, res) => {
           paymentStatus: session.payment_status,
         };
         const paymentResult = await Payment.create(newPayment);
+
+        await TutorApplication.updateOne(
+          {
+            tutorEmail: session.metadata.tutorEmail,
+            tuitionId: new ObjectId(session.metadata.tuitionId),
+          },
+          {
+            $set: {
+              status: "accepted",
+            },
+          },
+        );
+
+        await TutorApplication.updateMany(
+          {
+            tutorEmail: { $ne: session.metadata.tutorEmail },
+            tuitionId: new ObjectId(session.metadata.tuitionId),
+          },
+          {
+            $set: {
+              status: "rejected",
+            },
+          },
+        );
         const tuitionQuery = { _id: new ObjectId(session.metadata.tuitionId) };
         const tuitionUpdate = {
           $set: {
             paymentStatus: "paid",
             transactionId: session.payment_intent,
+            assignedTutor: session.metadata.tutorEmail,
           },
         };
         const tuitionResult = await Tuition.updateOne(
@@ -62,25 +87,10 @@ export const paymentSuccess = async (req, res) => {
           tuitionUpdate,
         );
 
-        const tutorQuery = {
-          tutorEmail: session.metadata.tutorEmail,
-          tuitionId: new ObjectId(session.metadata.tuitionId),
-        };
-        const tutorUpdate = {
-          $set: {
-            status: "accepted",
-          },
-        };
-        const tutorResult = await TutorApplication.updateOne(
-          tutorQuery,
-          tutorUpdate,
-        );
-
         return res.status(201).json({
           success: true,
           paymentInfo: paymentResult,
           modifyTuition: tuitionResult,
-          modifyTutor: tutorResult,
         });
       } catch (err) {
         if (err.code === 11000) {

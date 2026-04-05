@@ -52,9 +52,8 @@ export const getTuitionDetails = async (req, res) => {
 
 export const getAllApprovedTuitions = async (req, res) => {
   try {
-    // const query = { status: "approved" };
     const { class: classFilter, sort, search } = req.query;
-    const query = { status: "approved" };
+    const query = { status: "approved", paymentStatus: "unpaid" };
     if (classFilter) {
       query.class = classFilter;
     }
