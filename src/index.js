@@ -1,14 +1,14 @@
+import dotenv from "dotenv";
+dotenv.config();
 import express from "express";
 import cors from "cors";
 import { MongoClient, ServerApiVersion } from "mongodb";
-import dotenv from "dotenv";
 import connectDB from "./config/db.js";
 import userRoutes from "./routes/user.routes.js";
 import tuitionRoutes from "./routes/tuition.routes.js";
 import tutorProfileRoutes from "./routes/tutorProfile.routes.js";
 import tutorApplicationRoutes from "./routes/tutorApplication.routes.js";
 import paymentRoutes from "./routes/payment.routes.js";
-dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;

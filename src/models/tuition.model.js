@@ -34,6 +34,10 @@ const tuiTionSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    paymentStatus: {
+      type: String,
+      default: "unpaid",
+    },
     requirements: {
       type: [String],
       required: true,
