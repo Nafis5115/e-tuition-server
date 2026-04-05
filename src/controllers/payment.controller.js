@@ -78,6 +78,7 @@ export const paymentSuccess = async (req, res) => {
         const tuitionUpdate = {
           $set: {
             paymentStatus: "paid",
+            status: "assigned",
             transactionId: session.payment_intent,
             assignedTutor: session.metadata.tutorEmail,
           },
