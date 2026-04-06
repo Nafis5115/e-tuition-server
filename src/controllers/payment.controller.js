@@ -39,11 +39,14 @@ export const paymentSuccess = async (req, res) => {
   try {
     const sessionId = req.query.session_id;
     const session = await stripe.checkout.sessions.retrieve(sessionId);
+    const totalAmount = session.amount_total / 100;
     if (session.payment_status === "paid") {
       try {
         const newPayment = {
           userEmail: session.customer_email,
           amount: session.amount_total / 100,
+          tutorAmount: totalAmount * 0.9,
+          adminCommission: totalAmount * 0.1,
           tuitionId: session.metadata.tuitionId,
           tutorEmail: session.metadata.tutorEmail,
           currency: session.currency,
@@ -157,6 +160,18 @@ export const getUserPaymentHistory = async (req, res) => {
     ]);
 
     res.status(200).json(payments);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const getTutorRevenueHistory = async (req, res) => {
+  try {
+    const { email } = req.query;
+    const query = { tutorEmail: email };
+    const revenue = await Payment.find(query);
+    res.json(revenue);
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message });

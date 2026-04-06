@@ -19,6 +19,14 @@ const paymentSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    tutorAmount: {
+      type: Number,
+      required: true,
+    },
+    adminCommission: {
+      type: Number,
+      required: true,
+    },
     currency: {
       type: String,
       required: true,
