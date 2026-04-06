@@ -35,6 +35,10 @@ const tutorSchema = new mongoose.Schema(
       type: String,
       default: "pending",
     },
+    revenue: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true },
 );

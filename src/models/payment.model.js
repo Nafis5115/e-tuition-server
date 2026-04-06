@@ -11,6 +11,10 @@ const paymentSchema = new mongoose.Schema(
       ref: "Tuition",
       required: true,
     },
+    tutorEmail: {
+      type: String,
+      required: true,
+    },
     amount: {
       type: Number,
       required: true,

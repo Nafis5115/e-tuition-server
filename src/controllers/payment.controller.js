@@ -45,6 +45,7 @@ export const paymentSuccess = async (req, res) => {
           userEmail: session.customer_email,
           amount: session.amount_total / 100,
           tuitionId: session.metadata.tuitionId,
+          tutorEmail: session.metadata.tutorEmail,
           currency: session.currency,
           transactionId: session.payment_intent,
           paymentStatus: session.payment_status,
@@ -106,6 +107,56 @@ export const paymentSuccess = async (req, res) => {
     return res.status(201).json({
       success: false,
     });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const getUserPaymentHistory = async (req, res) => {
+  try {
+    const { email } = req.query;
+    const payments = await Payment.aggregate([
+      {
+        $match: { userEmail: email },
+      },
+      {
+        $lookup: {
+          from: "tuitions",
+          localField: "tuitionId",
+          foreignField: "_id",
+          as: "tuition",
+        },
+      },
+      {
+        $unwind: "$tuition",
+      },
+      {
+        $lookup: {
+          from: "tutorprofiles",
+          localField: "tutorEmail",
+          foreignField: "email",
+          as: "tutor",
+        },
+      },
+      {
+        $unwind: "$tutor",
+      },
+      {
+        $addFields: {
+          tutorName: "$tutor.name",
+          tuitionSubject: "$tuition.subject",
+        },
+      },
+      {
+        $unset: ["tutor", "tuition"],
+      },
+      {
+        $sort: { createdAt: -1 },
+      },
+    ]);
+
+    res.status(200).json(payments);
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message });
