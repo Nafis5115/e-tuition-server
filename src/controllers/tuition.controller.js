@@ -226,3 +226,40 @@ export const manageTuition = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+export const getTutorOngoingTuitions = async (req, res) => {
+  try {
+    const { email } = req.query;
+    const ongoingTuitions = await Tuition.aggregate([
+      {
+        $match: { assignedTutor: email },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "userEmail",
+          foreignField: "email",
+          as: "student",
+        },
+      },
+      {
+        $unwind: "$student",
+      },
+      {
+        $addFields: {
+          studentName: "$student.name",
+        },
+      },
+      {
+        $unset: ["student"],
+      },
+      {
+        $sort: { createdAt: -1 },
+      },
+    ]);
+    res.status(200).json(ongoingTuitions);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+};

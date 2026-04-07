@@ -9,6 +9,7 @@ import {
   getAllApprovedTuitions,
   getAllTuitions,
   manageTuition,
+  getTutorOngoingTuitions,
 } from "../controllers/tuition.controller.js";
 import verifyFirebaseToken from "../middleware/verifyFirebaseToken.js";
 
@@ -23,5 +24,6 @@ router.patch("/manage-tuition/:id", manageTuition);
 router.patch("/update-tuition/:id", verifyFirebaseToken, updateTuition);
 router.delete("/delete-tuition/:id", deleteTuition);
 router.get("/get-applied-tutors", getAppliedTutors);
+router.get("/tutor-ongoing-tuitions", getTutorOngoingTuitions);
 
 export default router;
