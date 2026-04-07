@@ -1,8 +1,12 @@
 import express from "express";
-import { getStudentDashboard } from "../controllers/dashboard.controller.js";
+import {
+  getStudentDashboard,
+  getTutorDashboard,
+} from "../controllers/dashboard.controller.js";
 
 const router = express.Router();
 
 router.get("/student-dashboard", getStudentDashboard);
+router.get("/tutor-dashboard", getTutorDashboard);
 
 export default router;
