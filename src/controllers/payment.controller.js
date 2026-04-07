@@ -101,7 +101,6 @@ export const paymentSuccess = async (req, res) => {
         if (err.code === 11000) {
           return res.json({
             message: "Already Exists",
-            transactionId: session.payment_intent,
           });
         }
         throw err;
@@ -169,8 +168,49 @@ export const getUserPaymentHistory = async (req, res) => {
 export const getTutorRevenueHistory = async (req, res) => {
   try {
     const { email } = req.query;
-    const query = { tutorEmail: email };
-    const revenue = await Payment.find(query);
+    const revenue = await Payment.aggregate([
+      {
+        $match: { tutorEmail: email },
+      },
+      {
+        $lookup: {
+          from: "tuitions",
+          localField: "tuitionId",
+          foreignField: "_id",
+          as: "tuition",
+        },
+      },
+      {
+        $unwind: "$tuition",
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "userEmail",
+          foreignField: "email",
+          as: "student",
+        },
+      },
+      {
+        $unwind: "$student",
+      },
+
+      {
+        $project: {
+          tutorAmount: 1,
+          paymentStatus: 1,
+          createdAt: 1,
+          studentName: "$student.name",
+          tuitionSubject: "$tuition.subject",
+          tuitionClass: "$tuition.class",
+        },
+      },
+      {
+        $sort: {
+          createdAt: -1,
+        },
+      },
+    ]);
     res.json(revenue);
   } catch (error) {
     console.log(error);
