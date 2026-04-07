@@ -1,5 +1,6 @@
 import Payment from "../models/payment.model.js";
 import Tuition from "../models/tuition.model.js";
+import User from "../models/user.model.js";
 import TutorApplication from "../models/tutorApplication.model.js";
 
 export const getStudentDashboard = async (req, res) => {
@@ -100,6 +101,52 @@ export const getTutorDashboard = async (req, res) => {
       totalEarnings,
       monthlyEarnings,
     });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const getAdminDashboard = async (req, res) => {
+  try {
+    const totalUsers = await User.countDocuments();
+
+    const activeTuitions = await Tuition.countDocuments({ status: "approved" });
+
+    const revenueAgg = await Payment.aggregate([
+      {
+        $group: {
+          _id: null,
+          totalRevenue: { $sum: "$adminCommission" },
+        },
+      },
+    ]);
+    const totalRevenue = revenueAgg[0]?.totalRevenue || 0;
+
+    const now = new Date();
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+    const monthlyRevenueAgg = await Payment.aggregate([
+      {
+        $match: {
+          createdAt: {
+            $gte: startOfMonth,
+            $lt: endOfMonth,
+          },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          monthlyRevenue: { $sum: "$adminCommission" },
+        },
+      },
+    ]);
+    const monthlyRevenue = monthlyRevenueAgg[0]?.monthlyRevenue || 0;
+
+    res
+      .status(200)
+      .json({ totalUsers, activeTuitions, totalRevenue, monthlyRevenue });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message });
