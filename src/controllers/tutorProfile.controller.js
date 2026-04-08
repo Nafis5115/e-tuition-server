@@ -45,10 +45,7 @@ export const getTutorApplicationStatus = async (req, res) => {
 export const getTutorDetails = async (req, res) => {
   try {
     const { email } = req.query;
-    if (req.headers.token_email !== email) {
-      return res.status(403).send({ message: "Forbidden Access" });
-    }
-    const tutorDetails = await TutorProfile.findOne({ email });
+    const tutorDetails = await User.findOne({ email });
     res.status(200).json(tutorDetails);
   } catch (error) {
     console.log(error);

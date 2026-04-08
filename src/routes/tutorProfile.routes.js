@@ -17,7 +17,7 @@ router.get(
   verifyFirebaseToken,
   getTutorApplicationStatus,
 );
-router.get("/tutor-details", verifyFirebaseToken, getTutorDetails);
+router.get("/tutor-details", getTutorDetails);
 router.patch("/update-tutorProfile", verifyFirebaseToken, updateTutorProfile);
 router.get("/pending-tutors", getPendingTutors);
 router.patch("/manage-tutor/:email", manageTutor);

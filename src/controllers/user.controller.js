@@ -141,14 +141,14 @@ export const getAllTutors = async (req, res) => {
 
 export const getSingleTutor = async (req, res) => {
   try {
-    const { email } = req.params;
-    // if (!mongoose.Types.ObjectId.isValid(email)) {
-    //   return res.status(400).json({ message: "Invalid tutor ID" });
-    // }
+    const { id } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "Invalid tutor ID" });
+    }
     const tutor = await User.aggregate([
       {
         $match: {
-          email: email,
+          _id: new ObjectId(id),
           role: "tutor",
         },
       },
