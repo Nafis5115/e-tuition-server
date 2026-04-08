@@ -100,6 +100,7 @@ export const getUserRole = async (req, res) => {
 
 export const getAllTutors = async (req, res) => {
   try {
+    const { search } = req.query;
     const tutors = await User.aggregate([
       {
         $match: { role: "tutor" },
@@ -118,6 +119,19 @@ export const getAllTutors = async (req, res) => {
           preserveNullAndEmptyArrays: true,
         },
       },
+      ...(search
+        ? [
+            {
+              $match: {
+                $or: [
+                  { name: { $regex: search, $options: "i" } },
+                  { "tutor.location": { $regex: search, $options: "i" } },
+                  { "tutor.subjects": { $regex: search, $options: "i" } },
+                ],
+              },
+            },
+          ]
+        : []),
       {
         $project: {
           _id: 1,
