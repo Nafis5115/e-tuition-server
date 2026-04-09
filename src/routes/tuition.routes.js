@@ -35,7 +35,12 @@ router.get("/all-approved-tuitions", getAllApprovedTuitions);
 router.get("/all-tuitions", verifyFirebaseToken, verifyAdmin, getAllTuitions);
 router.patch("/manage-tuition/:id", manageTuition);
 router.patch("/update-tuition/:id", verifyFirebaseToken, updateTuition);
-router.delete("/delete-tuition/:id", deleteTuition);
+router.delete(
+  "/delete-tuition/:id",
+  verifyFirebaseToken,
+  verifyStudent,
+  deleteTuition,
+);
 router.get(
   "/get-applied-tutors",
   verifyFirebaseToken,

@@ -1,5 +1,6 @@
 import Tuition from "../models/tuition.model.js";
 import { ObjectId } from "mongodb";
+import TutorApplication from "../models/tutorApplication.model.js";
 
 export const createTuition = async (req, res) => {
   try {
@@ -107,7 +108,10 @@ export const deleteTuition = async (req, res) => {
     const id = req.params.id;
     const query = { _id: new ObjectId(id) };
     const deleteTuition = await Tuition.deleteOne(query);
-    res.status(200).json(deleteTuition);
+    const deleteAppliedTutor = await TutorApplication.deleteMany({
+      tuitionId: id,
+    });
+    res.status(200).json({ deleteTuition, deleteAppliedTutor });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message });
@@ -170,7 +174,11 @@ export const getAppliedTutors = async (req, res) => {
           tutorLocation: "$tutor.location",
           experience: "$tutor.experience",
           status: "$applications.status",
+          createdAt: 1,
         },
+      },
+      {
+        $sort: { createdAt: -1 },
       },
     ]);
     res.json(appliedTutors);
@@ -202,6 +210,9 @@ export const getAllTuitions = async (req, res) => {
 
       {
         $unset: ["tutor"],
+      },
+      {
+        $sort: { createdAt: -1 },
       },
     ]);
     res.status(200).json(tuitions);
