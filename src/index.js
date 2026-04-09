@@ -14,7 +14,16 @@ import dashboardRoutes from "./routes/dashboard.routes.js";
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173", // local frontend
+      "https://e-tuition-server-ten.vercel.app/", // deployed frontend
+    ],
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    credentials: true,
+  }),
+);
 app.use(express.json());
 connectDB();
 
@@ -26,9 +35,11 @@ app.use("/api", paymentRoutes);
 app.use("/api", dashboardRoutes);
 
 app.get("/", (req, res) => {
-  res.json({ message: "E-Tuition Server running" });
+  res.send("E-Tuition Server running");
 });
 
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });
+
+export default app;
