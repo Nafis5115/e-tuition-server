@@ -10,8 +10,12 @@ import verifyFirebaseToken from "../middleware/verifyFirebaseToken.js";
 import verifyStudent from "../middleware/verifyStudent.js";
 const router = express.Router();
 
-router.post("/create-checkout-session", createCheckoutSession);
-router.patch("/payment-success", paymentSuccess);
+router.post(
+  "/create-checkout-session",
+  verifyFirebaseToken,
+  createCheckoutSession,
+);
+router.patch("/payment-success", verifyFirebaseToken, paymentSuccess);
 router.get(
   "/user-payment-history",
   verifyFirebaseToken,
