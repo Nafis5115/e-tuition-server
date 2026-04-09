@@ -14,16 +14,24 @@ import dashboardRoutes from "./routes/dashboard.routes.js";
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+const allowedOrigins = [
+  "http://localhost:5173",
+  // "https://your-frontend-domain.vercel.app",
+];
+
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173", // local frontend
-      "https://e-tuition-server-ten.vercel.app", // deployed frontend
-    ],
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, origin); // ✅ return exact origin
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   }),
 );
+
 app.use(express.json());
 connectDB();
 
@@ -36,10 +44,6 @@ app.use("/api", dashboardRoutes);
 
 app.get("/", (req, res) => {
   res.send("E-Tuition Server running");
-});
-
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
 });
 
 export default app;
