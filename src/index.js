@@ -18,7 +18,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173", // local frontend
-      "https://e-tuition-server-ten.vercel.app/", // deployed frontend
+      "https://e-tuition-server-ten.vercel.app", // deployed frontend
     ],
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     credentials: true,
