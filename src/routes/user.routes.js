@@ -11,10 +11,11 @@ import {
   updateUserRole,
 } from "../controllers/user.controller.js";
 import verifyFirebaseToken from "../middleware/verifyFirebaseToken.js";
+import verifyAdmin from "../middleware/verifyAdmin.js";
 
 const router = express.Router();
 
-router.get("/all-users", verifyFirebaseToken, getAllUsers);
+router.get("/all-users", verifyFirebaseToken, verifyAdmin, getAllUsers);
 router.post("/create-user", createUser);
 router.get("/get-user-phone", verifyFirebaseToken, getUserPhone);
 router.patch("/update-user-profile", verifyFirebaseToken, updateUserProfile);

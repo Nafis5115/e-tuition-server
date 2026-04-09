@@ -102,6 +102,9 @@ export const getPendingTutors = async (req, res) => {
           tutorPhotoURL: "$tutor.photoURL",
         },
       },
+      {
+        $sort: { createdAt: -1 },
+      },
     ]);
     res.status(200).send(pendingTutors);
   } catch (error) {

@@ -1,4 +1,5 @@
 import TutorApplication from "../models/tutorApplication.model.js";
+import { ObjectId } from "mongodb";
 
 export const createTutorApplication = async (req, res) => {
   try {
@@ -61,6 +62,18 @@ export const getApplicationsByTutor = async (req, res) => {
       },
     ]);
     res.status(200).json(applications);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const deleteApplicationByTutor = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const query = { _id: new ObjectId(id) };
+    const result = await TutorApplication.deleteOne(query);
+    res.status(200).json(result);
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message });
