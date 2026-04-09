@@ -9,6 +9,7 @@ import {
   updateTutorProfile,
 } from "../controllers/tutorProfile.controller.js";
 import verifyAdmin from "../middleware/verifyAdmin.js";
+import verifyTutor from "../middleware/verifyTutor.js";
 
 const router = express.Router();
 
@@ -19,7 +20,12 @@ router.get(
   getTutorApplicationStatus,
 );
 router.get("/tutor-details", getTutorDetails);
-router.patch("/update-tutorProfile", verifyFirebaseToken, updateTutorProfile);
+router.patch(
+  "/update-tutorProfile",
+  verifyFirebaseToken,
+  verifyTutor,
+  updateTutorProfile,
+);
 router.get(
   "/pending-tutors",
   verifyFirebaseToken,

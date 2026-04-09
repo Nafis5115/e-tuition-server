@@ -45,7 +45,7 @@ export const getTutorApplicationStatus = async (req, res) => {
 export const getTutorDetails = async (req, res) => {
   try {
     const { email } = req.query;
-    const tutorDetails = await User.findOne({ email });
+    const tutorDetails = await TutorProfile.findOne({ email });
     res.status(200).json(tutorDetails);
   } catch (error) {
     console.log(error);
