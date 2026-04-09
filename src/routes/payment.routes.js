@@ -7,11 +7,17 @@ import {
 } from "../controllers/payment.controller.js";
 import verifyTutor from "../middleware/verifyTutor.js";
 import verifyFirebaseToken from "../middleware/verifyFirebaseToken.js";
+import verifyStudent from "../middleware/verifyStudent.js";
 const router = express.Router();
 
 router.post("/create-checkout-session", createCheckoutSession);
 router.patch("/payment-success", paymentSuccess);
-router.get("/user-payment-history", getUserPaymentHistory);
+router.get(
+  "/user-payment-history",
+  verifyFirebaseToken,
+  verifyStudent,
+  getUserPaymentHistory,
+);
 router.get(
   "/tutor-revenue-history",
   verifyFirebaseToken,

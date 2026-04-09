@@ -8,10 +8,16 @@ import {
 import verifyFirebaseToken from "../middleware/verifyFirebaseToken.js";
 import verifyAdmin from "../middleware/verifyAdmin.js";
 import verifyTutor from "../middleware/verifyTutor.js";
+import verifyStudent from "../middleware/verifyStudent.js";
 
 const router = express.Router();
 
-router.get("/student-dashboard", verifyFirebaseToken, getStudentDashboard);
+router.get(
+  "/student-dashboard",
+  verifyFirebaseToken,
+  verifyStudent,
+  getStudentDashboard,
+);
 router.get(
   "/tutor-dashboard",
   verifyFirebaseToken,
