@@ -25,8 +25,8 @@ export const createCheckoutSession = async (req, res) => {
         tuitionId: tutorInfo.tuitionId,
         tutorEmail: tutorInfo.tutorEmail,
       },
-      success_url: `http://localhost:5173/dashboard/payment-success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `http://localhost:5173/dashboard/payment-cancelled`,
+      success_url: `http://https://e-tuition-f8526.web.app/dashboard/payment-success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `http://https://e-tuition-f8526.web.app/dashboard/payment-cancelled`,
     });
     res.send({ url: session.url });
   } catch (error) {
