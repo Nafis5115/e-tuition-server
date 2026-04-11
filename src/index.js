@@ -46,4 +46,8 @@ app.get("/", (req, res) => {
   res.send("E-Tuition Server running");
 });
 
+// app.listen(PORT, () => {
+//   console.log(PORT);
+// });
+
 export default app;

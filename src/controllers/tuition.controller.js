@@ -164,6 +164,7 @@ export const getAppliedTutors = async (req, res) => {
       },
       {
         $project: {
+          _id: "$applications._id",
           tuitionId: "$_id",
           tutorId: "$user._id",
           subject: 1,
@@ -182,6 +183,23 @@ export const getAppliedTutors = async (req, res) => {
       },
     ]);
     res.json(appliedTutors);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const rejectAppliedTutors = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const query = { _id: new ObjectId(id) };
+    const update = {
+      $set: {
+        status: "rejected",
+      },
+    };
+    const result = await TutorApplication.updateOne(query, update);
+    res.status(200).json(result);
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message });

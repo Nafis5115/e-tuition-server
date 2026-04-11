@@ -10,6 +10,7 @@ import {
   getAllTuitions,
   manageTuition,
   getTutorOngoingTuitions,
+  rejectAppliedTutors,
 } from "../controllers/tuition.controller.js";
 import verifyFirebaseToken from "../middleware/verifyFirebaseToken.js";
 import verifyAdmin from "../middleware/verifyAdmin.js";
@@ -46,6 +47,12 @@ router.get(
   verifyFirebaseToken,
   verifyStudent,
   getAppliedTutors,
+);
+router.patch(
+  "/reject-applied-tutors/:id",
+  verifyFirebaseToken,
+  verifyStudent,
+  rejectAppliedTutors,
 );
 router.get(
   "/tutor-ongoing-tuitions",
