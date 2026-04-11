@@ -163,7 +163,7 @@ export const getSingleTutor = async (req, res) => {
       {
         $match: {
           _id: new ObjectId(id),
-          role: "tutor",
+          // role: "tutor",
         },
       },
       {
